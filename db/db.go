@@ -5,6 +5,7 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"main/config"
+	"fmt"
 )
 
 var DB *gorm.DB // declare a global variable for database connection
@@ -15,5 +16,6 @@ func ConnectDatabase(cfg *config.Config) {
 	if err != nil {
 		log.Fatal("Database connection failed:", err)
 	}
+	fmt.Println("Database connection successful ✅")
 	DB = database // assign the database connection to the global variable
 }
