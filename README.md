@@ -38,7 +38,7 @@ GET http://localhost:8080/jokes
 
 ## API Endpoints
 
-- `GET /jokes` - Returns all jokes in JSON format.
+- `GET /jokes` - Returns 5 jokes in JSON format.
 - `POST /jokes/create` - Creates a new joke.
 - `PATCH /jokes/:id` - Updates a perticular joke.
 - `DELETE /jokes/:id` - Removes a joke.
