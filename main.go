@@ -3,12 +3,22 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"main/routes"
+	"main/config"
+	"log"
+	"main/db"
 )
 
 func main() {
-	router := gin.Default()
+	config := config.LoadConfig()
 
+	db.ConnectDatabase(config)
+	
+	router := gin.Default()
+	
 	routes.RegisterJokeRoutes(router)
 
-	router.Run(":3000")
+	err := router.Run(":" + config.Port)
+	if err != nil {
+		log.Fatal("Failed to start server:", err)
+	}
 }
