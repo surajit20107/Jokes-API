@@ -13,7 +13,7 @@ A simple and lightweight RESTful API built with Go, designed to provide random j
 
 ### Prerequisites
 
-- Go (1.16+ recommended)
+- Go (1.22+ recommended)
 
 ### Installation
 
@@ -33,17 +33,15 @@ go run main.go
 The server will start (by default on port 8080). You can then access the jokes API at:
 
 ```
-GET http://localhost:8080/joke
+GET http://localhost:8080/jokes
 ```
 
 ## API Endpoints
 
 - `GET /jokes` - Returns all jokes in JSON format.
-- `GET /jokes/:id` - Returns a single joke wkth same id.
-- `GET /jokes/random` - Returns a random joke in JSON format.
-- `POST /jokes/create` - Creates a new joke in jokes slice.
-- `PATCH /jokes/:id` - Updates a perticular joke with the same id.
-- `DELETE /jokes/:id` - Removes a joke with the same id of parameters.
+- `POST /jokes/create` - Creates a new joke.
+- `PATCH /jokes/:id` - Updates a perticular joke.
+- `DELETE /jokes/:id` - Removes a joke.
 
 ## Example Response
 
@@ -63,4 +61,4 @@ This project is open source and available under the MIT License.
 
 ---
 
-> Made with Go 🦦
+> Made with ❤️ & lots of ☕ by Surajit in GoLang 🦦

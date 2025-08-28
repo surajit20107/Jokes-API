@@ -4,53 +4,52 @@ import (
 	"github.com/gin-gonic/gin"
 	"main/models"
 	"main/services"
+	"math/rand"
 	"net/http"
 	"strconv"
-	"math/rand"
 )
 
 func GetJokes(c *gin.Context) {
-	jokes := services.GetJokes()
+	jokes, err := services.GetJokes()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, jokes)
 	return
 }
 
-func GetJokesById(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid joke id"})
-	}
-	joke, err := services.GetJokesById(id)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-	}
-	c.JSON(http.StatusOK, joke)
-}
-
 func CreateJoke(c *gin.Context) {
 	var newJoke models.Joke
-	if err := c.ShouldBindJSON(&newJoke); err != nil {
+	err := c.ShouldBindJSON(&newJoke)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-    return
+		return
 	}
-	created := services.CreateJoke(newJoke.Content, newJoke.Author)
+	created, err := services.CreateJoke(newJoke)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusCreated, created)
 	return
 }
 
 func UpdateJoke(c *gin.Context) {
-  id, err := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid joke id"})
+		return
 	}
 	var updatedJoke models.Joke
 	if err := c.ShouldBindJSON(&updatedJoke); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	updated, err := services.UpdateJoke(id, updatedJoke)
+	updated, err := services.UpdateJoke(uint(id), updatedJoke)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(http.StatusOK, updated)
 	return
@@ -61,16 +60,20 @@ func DeleteJoke(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid joke id"})
 	}
-	err = services.DeleteJoke(id)
+	err = services.DeleteJoke(uint(id))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	}
 	c.JSON(http.StatusNoContent, gin.H{"message": "Joke deleted successfully"})
-	return
 }
 
 func GetRandomJoke(c *gin.Context) {
-	jokes := services.GetJokes()
+	jokes, err := services.GetJokes()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	randomIndex := rand.Intn(len(jokes))
 	c.JSON(http.StatusOK, jokes[randomIndex])
+	return
 }
