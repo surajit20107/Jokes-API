@@ -22,6 +22,15 @@ func main() {
 	router := gin.Default()
 	
 	routes.RegisterJokeRoutes(router)
+	routes.RegisterAuthRoutes(router)
+
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"Message": "Api is running...",
+			"Version": "1.0.0",
+			"Author": "Surajit",
+		})
+	})
 
 	error := router.Run(":" + config.Port)
 	if error != nil {

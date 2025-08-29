@@ -20,8 +20,31 @@ deploymentTarget = "gce"
 
 [[ports]]
 localPort = 3000
-externalPort = 80
+externalPort = 3000
 
-[[ports]]
-localPort = 8080
-externalPort = 8080
+[agent]
+expertMode = true
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Go Server"
+
+[[workflows.workflow]]
+name = "Go Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "go run main.go"
+waitForPort = 3000
+
+[workflows.workflow.metadata]
+outputType = "console"
