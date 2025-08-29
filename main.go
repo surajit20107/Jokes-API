@@ -6,18 +6,14 @@ import (
 	"main/config"
 	"log"
 	"main/db"
-	"main/models"
 )
 
 func main() {
 	config := config.LoadConfig()
 
-	db.ConnectDatabase(config)
+	dataBase := db.ConnectDatabase(config)
 
-	err := db.DB.AutoMigrate(&models.Joke{})
-	if err != nil {
-		log.Fatal("Failed to migrate database:", err)
-	}
+	db.Migrate(dataBase)
 	
 	router := gin.Default()
 	

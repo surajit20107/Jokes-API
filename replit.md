@@ -1,8 +1,6 @@
 # Overview
 
-This repository contains a simple RESTful API built in Go for managing jokes. The API provides endpoints to fetch random jokes, create new jokes, update existing jokes, and delete jokes. It's designed as a lightweight service that can be easily integrated into applications, websites, or chatbots that need a source of humorous content.
-
-The project follows a clean architecture approach with a focus on simplicity and performance, leveraging Go's built-in HTTP capabilities along with popular libraries like Gin for web framework functionality and GORM for database operations.
+This is a RESTful Jokes API built with Go that provides endpoints for managing and retrieving jokes. The API is designed to be lightweight and simple, offering basic CRUD operations for joke management. It's structured as a learning project that demonstrates Go web API development patterns and can be easily integrated into applications, chatbots, or other services that need joke content.
 
 # User Preferences
 
@@ -10,64 +8,48 @@ Preferred communication style: Simple, everyday language.
 
 # System Architecture
 
-## Web Framework Architecture
-The application uses the Gin web framework, a high-performance HTTP web framework for Go. Gin was chosen for its:
-- Fast routing and middleware support
-- JSON binding and validation capabilities
-- Lightweight footprint with minimal overhead
-- Built-in features like parameter binding and error handling
+## Backend Architecture
 
-The API follows RESTful principles with clearly defined endpoints for CRUD operations on joke resources.
+The application follows a simple monolithic architecture built with Go's standard HTTP library. The main entry point is `main.go` which sets up the HTTP server running on port 8080. The architecture is designed for simplicity and ease of deployment, making it suitable for learning purposes and quick integrations.
 
-## Database Layer
-The application uses GORM as its Object-Relational Mapping (ORM) library, providing:
-- Database abstraction for easier migration between different database systems
-- Automatic schema migrations and model definitions
-- Query building with Go structs rather than raw SQL
-- Connection pooling and transaction support
+## API Design
 
-The database schema likely includes a jokes table with fields for ID, content, creation timestamps, and potentially categorization or rating fields.
+The REST API follows standard HTTP conventions with the following endpoint structure:
 
-## JSON Processing
-The system leverages the Bytedance Sonic library for JSON serialization/deserialization, chosen for:
-- Superior performance compared to standard library JSON processing
-- JIT compilation and SIMD acceleration for faster throughput
-- Drop-in replacement compatibility with standard encoding/json
-- Significant speed improvements for high-throughput scenarios
+- **GET /jokes** - Retrieves 5 random jokes in JSON format
+- **POST /jokes/create** - Creates a new joke entry
+- **PATCH /jokes/:id** - Updates a specific joke by ID
+- **DELETE /jokes/:id** - Removes a joke by ID
 
-## API Structure
-The REST API exposes the following endpoints:
-- `GET /jokes` - Retrieves a collection of jokes (returns 5 by default)
-- `POST /jokes/create` - Creates a new joke entry
-- `PATCH /jokes/:id` - Updates a specific joke by ID
-- `DELETE /jokes/:id` - Removes a specific joke by ID
+The API uses JSON for all request and response payloads, making it easy to integrate with various client applications.
 
-## Request/Response Handling
-The application implements proper HTTP status codes, error handling, and JSON response formatting. Input validation is handled through Gin's binding capabilities combined with validator tags for ensuring data integrity.
+## Data Storage
 
-## Deployment Architecture
-The application is designed to run as a standalone HTTP server, defaulting to port 8080. It can be easily deployed in containerized environments or traditional server setups due to Go's single binary deployment model.
+Currently, the application appears to use an in-memory data storage approach, which is suitable for development and testing but would need to be enhanced with a persistent database for production use. The simple architecture allows for easy extension to include database integration when needed.
+
+## Development Environment
+
+The project is configured for Go 1.22+ and includes development tooling support through the Go toolchain. The structure supports hot-reloading during development, making it developer-friendly for rapid iteration.
 
 # External Dependencies
 
-## Core Framework Dependencies
-- **Gin Web Framework** (`github.com/gin-gonic/gin`) - HTTP web framework providing routing, middleware, and request handling
-- **GORM** (`gorm.io/gorm`) - Object-relational mapping library for database operations and schema management
+## Core Dependencies
 
-## Performance Libraries
-- **Bytedance Sonic** (`github.com/bytedance/sonic`) - High-performance JSON serialization library with JIT compilation
-- **CloudWeGo Base64x** (`github.com/cloudwego/base64x`) - Optimized base64 encoding/decoding implementation
-- **CloudWeGo IASM** (`github.com/cloudwego/iasm`) - Interactive assembler for performance optimizations
+- **Go Standard Library** - HTTP server functionality and basic JSON handling
+- **Go Toolchain** - Development and build tools (Go 1.21+ versions detected in telemetry)
 
-## Validation and Utilities
-- **Go Playground Validator** (`github.com/go-playground/validator`) - Struct validation using tags
-- **Go Playground Locales** (`github.com/go-playground/locales`) - Localization support for international applications
-- **Gabriel Vasile Mimetype** (`github.com/gabriel-vasile/mimetype`) - MIME type detection based on magic numbers
+## Development Tools
 
-## Standard Library Extensions
-- **Gin Server-Sent Events** (`github.com/gin-contrib/sse`) - Server-sent events support for real-time features
-- **Google Protocol Buffers** (`google.golang.org/protobuf`) - Protocol buffer support for efficient data serialization
-- **YAML v3** (`gopkg.in/yaml.v3`) - YAML configuration file parsing and generation
+- **Go Language Server (gopls)** - IDE support for development, as evidenced by the telemetry data
+- **Air** - Live reload functionality for development (referenced in gopath dependencies)
 
-## Development Environment
-The project uses Go modules for dependency management and includes Go toolchain components for development support. The Go version targets 1.22+ for optimal performance and feature compatibility.
+## Potential Future Dependencies
+
+The gopath structure suggests the project may be prepared to integrate additional libraries commonly used in Go web development:
+
+- **Gin Framework** - Web framework (dependencies present in gopath)
+- **GORM** - Object-relational mapping for database operations
+- **Protocol Buffers** - For advanced serialization if needed
+- **Sonic** - High-performance JSON library for better performance
+
+The modular structure allows for easy integration of these dependencies as the application grows in complexity.

@@ -10,7 +10,7 @@ import (
 
 var DB *gorm.DB // declare a global variable for database connection
 
-func ConnectDatabase(cfg *config.Config) {
+func ConnectDatabase(cfg *config.Config) *gorm.DB {
 	// connect to the database
 	database, err := gorm.Open(postgres.Open(cfg.DBUrl), &gorm.Config{})
 	if err != nil {
