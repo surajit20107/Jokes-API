@@ -8,6 +8,7 @@ GOPATH="$REPL_HOME/gopath"
 
 [nix]
 channel = "stable-24_05"
+packages = ["air"]
 
 [gitHubImport]
 requiredFiles = [".replit"]
@@ -21,6 +22,13 @@ deploymentTarget = "gce"
 [[ports]]
 localPort = 3000
 externalPort = 3000
+
+[[ports]]
+localPort = 3001
+
+[[ports]]
+localPort = 8080
+externalPort = 8080
 
 [agent]
 expertMode = true
