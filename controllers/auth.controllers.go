@@ -25,7 +25,7 @@ func Register(c *gin.Context) {
 	if !validEmail {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid email",
-			"data": user,
+			"email": user.Email,
 		})
 		return
 	}
