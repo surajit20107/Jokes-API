@@ -19,4 +19,5 @@ func ConnectDatabase(cfg *config.Config) *gorm.DB {
 	
 	fmt.Println("Database connection successful ✅")
 	DB = database // assign the database connection to the global variable
+	return database
 }
