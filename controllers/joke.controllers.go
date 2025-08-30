@@ -57,13 +57,19 @@ func UpdateJoke(c *gin.Context) {
 
 func DeleteJoke(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
+	
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid joke id"})
+		return
 	}
+	
 	err = services.DeleteJoke(uint(id))
+	
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
 	}
+	
 	c.JSON(http.StatusNoContent, gin.H{"message": "Joke deleted successfully"})
 }
 
@@ -71,6 +77,10 @@ func GetRandomJoke(c *gin.Context) {
 	jokes, err := services.GetJokes()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	if len(jokes) == 0 {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "No jokes found"})
 		return
 	}
 	randomIndex := rand.Intn(len(jokes))

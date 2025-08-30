@@ -6,6 +6,14 @@ import (
 )
 
 func ValidateEmail(email string) bool {
+	if email == "" {
+		return false
+	}
+	
+	if len(email) > 5 && len(email) < 30 {
+		return false
+	}
+	
 	_, err := mail.ParseAddress(email)
 	if err != nil {
 		return false

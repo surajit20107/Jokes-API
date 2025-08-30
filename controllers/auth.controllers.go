@@ -13,11 +13,19 @@ import (
 func Register(c *gin.Context) {
 	var user models.User
 
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
 	validEmail := validator.ValidateEmail(user.Email)
 
 	if !validEmail {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid email",
+			"data": user,
 		})
 		return
 	}
@@ -27,13 +35,6 @@ func Register(c *gin.Context) {
 	if !validPassword {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid password",
-		})
-		return
-	}
-	
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
 		})
 		return
 	}

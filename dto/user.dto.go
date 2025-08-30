@@ -3,12 +3,13 @@ package dto
 import (
 	"main/models"
 	"time"
+	"github.com/google/uuid"
 )
 
 type userResponse struct {
-	ID        uint   `json:"id"`
-	Name      string `json:"name" binding:"required,email"`
-	Email     string `json:"email" binding:"required,min=8"`
+	ID        uuid.UUID   `json:"id"`
+	Name      string `json:"name"`
+	Email     string `json:"email"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
