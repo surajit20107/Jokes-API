@@ -5,7 +5,7 @@ import (
   "main/db"
   "gorm.io/gorm"
   "errors"
-  "fmt"
+  "main/utils"
 )
 
 func RegisterUser(user, email, password string) (models.User, error) { 
@@ -30,10 +30,23 @@ func RegisterUser(user, email, password string) (models.User, error) {
   result := db.DB.Create(&newUser)
 
   if result.Error != nil {
-    fmt.Println("Error:",result.Error)
     return models.User{},
     errors.New("Failed to create user")
   }
 
   return newUser, nil 
 }
+
+
+func LoginUser(email, password string) (string, error) {
+  var user models.User
+  err := db.DB.Where("email = ?", email).First(&user).Error
+  if err != nil {
+    return "", errors.New("Invalid credentials")
+  }
+  if !utils.CheckPassword(password, user.Password) {
+    return "", errors.New("Invalid credentials")
+  }
+  token, err := utils.GenerateToken(user.ID)
+}
+

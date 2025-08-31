@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
+	"main/utils"
 	"main/dto"
 	"main/models"
 	"main/services"
@@ -39,8 +39,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	// hash password
-	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+	hash, err := utils.HashPassword(user.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -68,9 +67,29 @@ func Register(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "Login route",
-	})
+	var user models.User
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	validEmail := validator.ValidateEmail(user.Email)
+	if !validEmail {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid email",
+			"email": user.Email,
+		})
+		return
+	}
+	validPassword := validator.ValidatePassword(user.Password)
+	if !validPassword {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid password",
+		})
+		return
+	}
+	token, err := services.LoginUser(user.Email, user.Password)
 }
 
 func Logout(c *gin.Context) {

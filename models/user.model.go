@@ -1,14 +1,17 @@
 package models
 
 import (
-	"time"
+	//"time"
+	"gorm.io/gorm"
 )
 
 type User struct {
-	ID        uint   `gorm:"primaryKey"`
+	gorm.Model
+	//ID        uint   `gorm:"primaryKey"`
 	Name      string `gorm:"not null" json:"name" binding:"required,min=5,max=30"`
 	Email     string `gorm:"unique;not null" json:"email" binding:"required,email,min=8,max=30"`
 	Password  string `gorm:"not null" json:"password" binding:"required,min=8,max=20"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	Jokes []Joke `gorm:"foreignKey:Author"`
+	//CreatedAt time.Time
+	//UpdatedAt time.Time
 }
