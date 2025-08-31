@@ -33,3 +33,19 @@ func GenerateToken(user models.User) (string, error) {
 	return tokenString, nil
 }
 
+
+func ValidateToken(token string) (*jwt.MapClaims, error) {
+	parsedToken, err := jwt.ParseWithClaims(token, &jwt.MapClaims{}, func(token, *jwt.Token) (interface{}, error) {
+		return jwtSecret, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	claims, ok := parsedToken.Claims.(*jwt.MapClaims); {
+		if !ok || !parsedToken.Valid {
+			return nil, err
+		}
+	}
+	return claims, nil
+}
+
