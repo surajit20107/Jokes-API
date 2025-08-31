@@ -90,6 +90,32 @@ func Login(c *gin.Context) {
 		return
 	}
 	token, err := services.LoginUser(user.Email, user.Password)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	
+/*
+	cookie := http.Cookie{
+		Name: "token",
+		Value: token,
+		Path: "/",
+		Domain: "localhost",
+		HttpOnly: true,
+		Secure: true,
+		SameSite: http.SameSiteNoneMode,
+		MaxAge: 60 * 60 * 24 * 7,
+	}
+*/
+	
+	c.SetCookie("token", token, 3600, "/", "localhost", true, true)
+	
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Login successful",
+		"token": token,
+	})
 }
 
 func Logout(c *gin.Context) {

@@ -34,7 +34,12 @@ func GenerateToken(user models.User) (string, error) {
 }
 
 func ValidateToken(token string) bool {
-	token, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("JWT_SECRET")), nil,
-	}),
+	parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (any, error) {
+		return []byte(os.Getenv("JWT_SECRET")), nil
+	})
+
+	if err != nil {
+		return false
+	}
+	return parsedToken.Valid
 }
