@@ -8,6 +8,14 @@ import (
 	"time"
 )
 
+var claims = jwt.MapClaims {
+  "user_id": user.ID,
+  "email": user.Email,
+  "exp": time.Now().Add(time.Hour * 24 * 7).Unix(),
+}
+
+var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
+
 func HashPassword(password string) (string, error) {
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(password), 12)
 	return string(hashedPass), err
@@ -18,12 +26,6 @@ func CheckPassword(password, hash string) bool {
 }
 
 func GenerateToken(user models.User) (string, error) {
-	claims := jwt.MapClaims{
-		"user_id": user.ID,
-		"email":   user.Email,
-		"exp":     time.Now().Add(time.Hour * 24 * 7),
-	}
-	jwtSecret := os.Getenv("JWT_SECRET")
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims(claims))
 	tokenString, err := token.SignedString([]byte(jwtSecret))
@@ -33,13 +35,16 @@ func GenerateToken(user models.User) (string, error) {
 	return tokenString, nil
 }
 
-func ValidateToken(token string) bool {
-	parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (any, error) {
-		return []byte(os.Getenv("JWT_SECRET")), nil
+func ValidateToken(token string) (*jwt.MapClaims, error) {
+  parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		return []byte(jwtSecret), nil
 	})
-
 	if err != nil {
-		return false
+		return nil, err
 	}
-	return parsedToken.Valid
+	claims, ok := parsedToken.Claims.(jwt.MapClaims)
+	if !ok || !parsedToken.Valid {
+		return nil, err
+	}
+	return claims, nil
 }
