@@ -5,6 +5,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"main/models"
 	"os"
+	"time"
 )
 
 var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
@@ -19,6 +20,11 @@ func CheckPassword(password, hash string) bool {
 }
 
 func GenerateToken(user models.User) (string, error) {
+	claims := jwt.MapClaims{
+		"user_id": user.ID,
+		"email":   user.Email,
+		"exp":     time.Now().Add(time.Hour * 24 * 7).Unix(),
+	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims(claims))
 	tokenString, err := token.SignedString([]byte(jwtSecret))
 	if err != nil {
