@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"guthub.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 	"main/utils"
 	"net/http"
 	"strings"

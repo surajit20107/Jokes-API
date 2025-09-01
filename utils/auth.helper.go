@@ -8,6 +8,12 @@ import (
 	"time"
 )
 
+type Claims struct{
+	UserID uint `json:"user_id"`
+	Email string `json:"email"`
+	jwt.RegisteredClaims
+}
+
 var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
 func HashPassword(password string) (string, error) {
@@ -33,14 +39,17 @@ func GenerateToken(user models.User) (string, error) {
 	return tokenString, nil
 }
 
-func ValidateToken(token string) (*jwt.MapClaims, error) {
-	parsedToken, err := jwt.ParseWithClaims(token, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
+func ValidateToken(token string) (*Claims, error) {
+	parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, jwt.ErrSignatureInvalid
+		}
 		return jwtSecret, nil
 	})
 	if err != nil {
 		return nil, err
 	}
-	claims, ok := parsedToken.Claims.(*jwt.MapClaims)
+	claims, ok := parsedToken.Claims.(*Claims)
 	{
 		if !ok || !parsedToken.Valid {
 			return nil, err
