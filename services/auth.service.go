@@ -55,3 +55,12 @@ func LoginUser(email, password string) (string, error) {
   return token, nil
 }
 
+func GetUserByID(id uint) (models.User, error) {
+  var user models.User
+  userData := db.DB.First(&user, id)
+
+  if userData.Error != nil {
+    return models.User{}, errors.New("User not found")
+  }
+  return user, nil
+}

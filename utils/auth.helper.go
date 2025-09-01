@@ -40,7 +40,8 @@ func GenerateToken(user models.User) (string, error) {
 }
 
 func ValidateToken(token string) (*Claims, error) {
-	parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+	claims := &Claims{}
+	parsedToken, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.ErrSignatureInvalid
 		}
@@ -49,11 +50,8 @@ func ValidateToken(token string) (*Claims, error) {
 	if err != nil {
 		return nil, err
 	}
-	claims, ok := parsedToken.Claims.(*Claims)
-	{
-		if !ok || !parsedToken.Valid {
-			return nil, err
-		}
+	if !parsedToken.Valid {
+		return nil, jwt.ErrTokenInvalidClaims
 	}
 	return claims, nil
 }

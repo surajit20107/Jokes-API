@@ -97,20 +97,7 @@ func Login(c *gin.Context) {
 		return
 	}
 	
-/*
-	cookie := http.Cookie{
-		Name: "token",
-		Value: token,
-		Path: "/",
-		Domain: "localhost",
-		HttpOnly: true,
-		Secure: true,
-		SameSite: http.SameSiteNoneMode,
-		MaxAge: 60 * 60 * 24 * 7,
-	}
-*/
-	
-	c.SetCookie("token", token, 3600, "/", "localhost", true, true)
+	c.SetCookie("token", token, 60 * 60 * 24 * 7, "/", "", false, true)
 	
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Login successful",
@@ -119,13 +106,36 @@ func Login(c *gin.Context) {
 }
 
 func Logout(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "Logout route",
+	c.SetCookie("token", "", -1, "/", "", false, true)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Logout successfully",
 	})
+	return
 }
 
 func Me(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "Current user route",
+	userId, exists := c.Get("user_id")
+	
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Unauthorized",
+		})
+		return
+	}
+
+	user, err := services.GetUserByID(userId.(uint))
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	userResponse := dto.ToUserResponse(user)
+
+	c.JSON(http.StatusOK, gin.H{
+		"user": userResponse,
 	})
+	return
 }
