@@ -1,6 +1,6 @@
 entrypoint = "main.go"
 run = ["go", "run", "."]
-modules = ["go-1.24", "postgresql-16"]
+modules = ["go-1.24", "nodejs-20", "postgresql-16"]
 
 [env]
 GOPATH="$REPL_HOME/gopath"
