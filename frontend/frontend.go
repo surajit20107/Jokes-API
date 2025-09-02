@@ -7,7 +7,11 @@ func FrontendRoutes(router *gin.Engine) {
   router.LoadHTMLGlob("./frontend/templates/*")
   
   router.GET("/", func(c *gin.Context) {
-    c.HTML(200, "index.html", nil)
+    c.HTML(200, "login.html", nil)
+  })
+
+  router.GET("/register", func(c *gin.Context) {
+    c.HTML(200, "register.html", nil)
   })
 
   // invalid route
