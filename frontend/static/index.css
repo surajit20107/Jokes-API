@@ -1,8 +1,10 @@
-@import base
-@import components
-@import utilities
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /*
 build your css with following cmd:
 
-npx @tailwindcss/cli -i input.css -o output.css
+npx tailwindcss -i frontend/static/index.css -o frontend/static/style.css --watch
 */
