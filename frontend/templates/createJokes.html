@@ -138,6 +138,29 @@
         // Set current year in footer
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
+        // Check authentication status on page load
+        async function checkAuthStatus() {
+            try {
+                const response = await fetch('/api/v1/jokes/', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.status === 401) {
+                    // User is not authenticated, redirect to login
+                    window.location.href = '/';
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                return false;
+            }
+        }
+
+        // Run auth check when page loads
+        checkAuthStatus();
+
         // Form elements
         const createJokeForm = document.getElementById('createJokeForm');
         const jokeContentTextarea = document.getElementById('jokeContent');
@@ -222,6 +245,10 @@
                 });
 
                 const data = await response.json();
+                
+                // Debug logging
+                console.log('Response status:', response.status);
+                console.log('Response data:', data);
 
                 if (response.ok) {
                     successMessage.innerHTML = '<i class="fa-solid fa-check-circle mr-2"></i>Joke shared successfully! Thank you for contributing to JokeCrowd!';
@@ -237,9 +264,11 @@
                     successMessage.scrollIntoView({ behavior: 'smooth' });
                 } else {
                     if (response.status === 401) {
-                        errorMessage.innerHTML = '<i class="fa-solid fa-exclamation-triangle mr-2"></i>You need to be logged in to share jokes. <a href="/" class="text-red-800 underline hover:text-red-900">Login here</a>';
+                        // Clear any existing cookies and redirect to login
+                        document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                        errorMessage.innerHTML = '<i class="fa-solid fa-exclamation-triangle mr-2"></i>Session expired. Please <a href="/" class="text-red-800 underline hover:text-red-900">login again</a>';
                     } else {
-                        errorMessage.innerHTML = '<i class="fa-solid fa-exclamation-triangle mr-2"></i>' + (data.error || 'Failed to share joke. Please try again.');
+                        errorMessage.innerHTML = '<i class="fa-solid fa-exclamation-triangle mr-2"></i>' + (data.error || data.message || 'Failed to share joke. Please try again.');
                     }
                     errorMessage.classList.remove('hidden');
                 }
