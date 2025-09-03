@@ -15,8 +15,7 @@
                 <a href="/home" class="text-2xl font-bold text-blue-600 cursor-pointer">JokeCrowd</a>
             </div>
             <div class="flex items-center space-x-4">
-                <a href="/home" class="text-zinc-600 hover:text-blue-600 transition duration-300 cursor-pointer">Home</a>
-                <a href="/logout" id="logoutBtn" class="text-zinc-600 hover:text-blue-600 transition duration-300 cursor-pointer">Logout</a>
+                <a href="/home" class="text-blue-600 hover:text-blue-400 transition duration-300 cursor-pointer">Home</a>
             </div>
         </div>
     </nav>
@@ -33,7 +32,7 @@
 
             <!-- Create Joke Form -->
             <div class="bg-white rounded-lg shadow-lg p-8">
-                <form id="createJokeForm">
+                <form id="createJokeForm" action="/api/v1/jokes/create" method="POST">
                     <!-- Joke Content -->
                     <div class="mb-6">
                         <label for="jokeContent" class="block text-lg font-semibold text-zinc-700 mb-3">
