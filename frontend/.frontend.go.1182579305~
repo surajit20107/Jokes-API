@@ -19,11 +19,6 @@ func FrontendRoutes(router *gin.Engine) {
   })
 
   router.GET("/profile", func(c *gin.Context) {
-    token, err := c.Cookie("token")
-    if err != nil || token == "" {
-      c.Redirect(302, "/")
-      return
-    }
     c.HTML(200, "profile.html", nil)
   })
 

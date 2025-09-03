@@ -206,9 +206,9 @@
                             "Login successful! Redirecting...";
                         successMessage.classList.remove("hidden");
 
-                        // Redirect to homepage after successful login
+                        // Redirect to profile page after successful login
                         setTimeout(() => {
-                            window.location.href = "/create";
+  console.log(response)                          //window.location.href = "/profile";
                         }, 1500);
                     } else {
                         errorMessage.textContent =
