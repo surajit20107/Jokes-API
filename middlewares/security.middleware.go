@@ -13,7 +13,7 @@ func SecurityHeaders() gin.HandlerFunc {
 		c.Header("Referrer-Policy", "strict-origin-when-cross-origin")
 
 		// CORS headers
-		c.Header("Access-Control-Allow-Origin", "https://crowdjokes.com") // Configure appropriately for production
+		c.Header("Access-Control-Allow-Origin", "*") // Configure appropriately for production
 		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		c.Header("Access-Control-Allow-Credentials", "true")
