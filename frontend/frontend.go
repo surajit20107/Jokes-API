@@ -14,6 +14,10 @@ func FrontendRoutes(router *gin.Engine) {
     c.HTML(200, "register.html", nil)
   })
 
+  router.GET("/home", func(c *gin.Context) {
+    c.HTML(200, "home.html", nil)
+  })
+
   // invalid route
   router.NoRoute(func(c *gin.Context) {
     c.HTML(404, "404.html", nil)
