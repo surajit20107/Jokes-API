@@ -3,6 +3,7 @@ package routes
 import (
   "github.com/gin-gonic/gin"
   "main/controllers"
+  middleware "main/middlewares"
 )
 
 func RegisterAuthRoutes(router *gin.Engine) {
@@ -11,6 +12,6 @@ func RegisterAuthRoutes(router *gin.Engine) {
     auth.POST("/register", controllers.Register)
     auth.POST("/login", controllers.Login)
     auth.POST("/logout", controllers.Logout)
-    auth.GET("/me", controllers.Me)
+    auth.GET("/me", middleware.CheckAuth(), controllers.Me)
   }
 }

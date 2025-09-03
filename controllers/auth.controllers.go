@@ -90,7 +90,6 @@ func Logout(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Logout successfully",
 	})
-	return
 }
 
 func Me(c *gin.Context) {
@@ -101,5 +100,7 @@ func Me(c *gin.Context) {
 		})
 		return
 	}
-	
+	c.JSON(http.StatusOK, gin.H{
+		"user": user,
+	})
 }

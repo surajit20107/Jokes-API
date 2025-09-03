@@ -100,3 +100,26 @@ func GetRandomJoke(c *gin.Context) {
 	c.JSON(http.StatusOK, jokes[randomIndex])
 	return
 }
+
+func GetMyJokes(c *gin.Context)  {
+	userID, exist := c.Get("user_id")
+
+	if !exist {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Unauthorized",
+		})
+		return
+	}
+
+	jokes, err := services.GetMyJokes(userID.(uint))
+	
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"jokes": jokes,
+	})
+}

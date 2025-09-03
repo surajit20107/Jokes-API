@@ -48,3 +48,15 @@ func DeleteJoke(id uint) error {
   }
   return nil
 }
+
+func GetMyJokes(id uint) ([]models.Joke, error) {
+	var jokes []models.Joke
+	
+	result := db.DB.Where("author = ?", id).Find(&jokes)
+	
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return jokes, nil
+}
