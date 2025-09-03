@@ -202,13 +202,13 @@
                     const data = await response.json();
 
                     if (response.ok) {
+                        localStorage.setItem("token", data.token)
                         successMessage.textContent =
                             "Login successful! Redirecting...";
                         successMessage.classList.remove("hidden");
 
                         // Redirect to profile page after successful login
-                        setTimeout(() => {
-  console.log(response)                          //window.location.href = "/profile";
+                        setTimeout(() => {                          window.location.href = "/profile";
                         }, 1500);
                     } else {
                         errorMessage.textContent =
