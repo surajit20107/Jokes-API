@@ -10,7 +10,7 @@ func ValidateEmail(email string) bool {
 		return false
 	}
 	
-	if len(email) < 5 && len(email) > 30 {
+	if len(email) < 5 || len(email) > 30 {
 		return false
 	}
 	

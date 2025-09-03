@@ -5,6 +5,7 @@ import (
 	"main/utils"
 	"main/dto"
 	"main/services"
+	"main/validator"
 	"net/http"
 )
 
@@ -14,6 +15,20 @@ func Register(c *gin.Context) {
 	if err := c.ShouldBindJSON(&userDTO); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
+		})
+		return
+	}
+
+	if !validator.ValidateEmail(userDTO.Email) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid email",
+		})
+		return
+	}
+
+	if !validator.ValidatePassword(userDTO.Password) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid password",
 		})
 		return
 	}
