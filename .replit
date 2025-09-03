@@ -35,3 +35,13 @@ localPort = 8080
 expertMode = true
 
 [workflows]
+runButton = "Start Server"
+
+[[workflows.workflow]]
+name = "Start Server"
+author = 45591193
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "go run ."

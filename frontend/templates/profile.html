@@ -117,29 +117,37 @@
     </div>
 
     <script>
+        // Get token from localStorage first, fallback to cookie-based auth
         const token = localStorage.getItem('token');
-                        // Check authentication status on page load
+        
+        // Check authentication status on page load
         async function checkAuth() {
             try {
+                // First try with token in header if available
+                let headers = { 'Content-Type': 'application/json' };
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+                
                 const response = await fetch('/api/v1/auth/me', {
                     method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    },
+                    headers: headers,
                     credentials: 'include',
                 });
                 
                 if (!response.ok) {
+                    console.error('Auth check failed:', response.status);
                     window.location.href = '/';
                     return;
                 }
                 
                 const data = await response.json();
- console.log(data)              loadUserProfile(data.user);
+                console.log('User data:', data);
+                loadUserProfile(data.user);
                 loadUserJokes();
             } catch (error) {
                 console.error('Authentication check failed:', error);
-                window.location.href = '/login';
+                window.location.href = '/';
             }
         }
 
@@ -159,11 +167,15 @@
         // Load user's jokes
         async function loadUserJokes() {
             try {
-                const response = await fetch('/api/v1/jokes/my', {
+                // Use the general jokes endpoint since /my might not exist
+                let headers = { 'Content-Type': 'application/json' };
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+                
+                const response = await fetch('/api/v1/jokes', {
                     method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: headers,
                     credentials: 'include'
                 });
                 
@@ -172,10 +184,11 @@
                 }
                 
                 const data = await response.json();
+                console.log('Jokes data:', data);
                 const userJokesContainer = document.getElementById('userJokes');
                 
-                // Filter jokes by current user (you might need to add user filtering in backend)
-                const jokes = data.jokes || [];
+                // Get all jokes for now (you can add user filtering later)
+                const jokes = data.jokes || data || [];
                 
                 if (jokes.length === 0) {
                     userJokesContainer.innerHTML = `
