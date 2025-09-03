@@ -154,7 +154,7 @@
         // Load user's jokes
         async function loadUserJokes() {
             try {
-                const response = await fetch('/api/v1/jokes', {
+                const response = await fetch('/api/v1/jokes/my', {
                     credentials: 'include'
                 });
                 
