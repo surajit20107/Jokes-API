@@ -4,42 +4,21 @@ import (
 	"github.com/gin-gonic/gin"
 	"main/utils"
 	"main/dto"
-	"main/models"
 	"main/services"
-	"main/validator"
 	"net/http"
 )
 
 func Register(c *gin.Context) {
-	var user models.User
+	var userDTO dto.UserRegistration
 
-	if err := c.ShouldBindJSON(&user); err != nil {
+	if err := c.ShouldBindJSON(&userDTO); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	validEmail := validator.ValidateEmail(user.Email)
-
-	if !validEmail {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid email",
-			"email": user.Email,
-		})
-		return
-	}
-
-	validPassword := validator.ValidatePassword(user.Password)
-
-	if !validPassword {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid password",
-		})
-		return
-	}
-
-	hash, err := utils.HashPassword(user.Password)
+	hash, err := utils.HashPassword(userDTO.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -47,9 +26,9 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	user.Password = string(hash)
+	userDTO.Password = string(hash)
 
-	createdUser, err := services.RegisterUser(user.Name, user.Email, user.Password)
+	createdUser, err := services.RegisterUser(userDTO.Name, userDTO.Email, userDTO.Password)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -67,29 +46,15 @@ func Register(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-	var user models.User
-	if err := c.ShouldBindJSON(&user); err != nil {
+	var userDTO dto.UserLogin
+	if err := c.ShouldBindJSON(&userDTO); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
-	validEmail := validator.ValidateEmail(user.Email)
-	if !validEmail {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid email",
-			"email": user.Email,
-		})
-		return
-	}
-	validPassword := validator.ValidatePassword(user.Password)
-	if !validPassword {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid password",
-		})
-		return
-	}
-	token, err := services.LoginUser(user.Email, user.Password)
+	
+	token, err := services.LoginUser(userDTO.Email, userDTO.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
