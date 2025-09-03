@@ -18,6 +18,10 @@ func FrontendRoutes(router *gin.Engine) {
     c.HTML(200, "home.html", nil)
   })
 
+  router.GET("/profile", func(c *gin.Context) {
+    c.HTML(200, "profile.html", nil)
+  })
+
   router.GET("/create", func(c *gin.Context) {
     c.HTML(200, "createJokes.html", nil)
   })

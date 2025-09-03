@@ -94,28 +94,12 @@ func Logout(c *gin.Context) {
 }
 
 func Me(c *gin.Context) {
-	userId, exists := c.Get("user_id")
-	
-	if !exists {
+	user, exist := c.Get("user")
+	if !exist {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Unauthorized",
 		})
 		return
 	}
-
-	user, err := services.GetUserByID(userId.(uint))
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
-	userResponse := dto.ToUserResponse(user)
-
-	c.JSON(http.StatusOK, gin.H{
-		"user": userResponse,
-	})
-	return
+	
 }
