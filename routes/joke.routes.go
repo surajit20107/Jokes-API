@@ -11,8 +11,8 @@ func RegisterJokeRoutes(router *gin.Engine) {
 	{
 		jokes.GET("/", controller.GetJokes)
 		jokes.POST("/create", middleware.CheckAuth(), controller.CreateJoke)
-		jokes.PATCH("/:id", controller.UpdateJoke)
-		jokes.DELETE("/:id", controller.DeleteJoke)
+		jokes.PATCH("/:id", middleware.CheckAuth(), controller.UpdateJoke)
+		jokes.DELETE("/:id", middleware.CheckAuth(), controller.DeleteJoke)
 		jokes.GET("/random", controller.GetRandomJoke)
 	}
 }
