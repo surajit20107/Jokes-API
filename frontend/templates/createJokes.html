@@ -236,7 +236,7 @@
                     successMessage.scrollIntoView({ behavior: 'smooth' });
                 } else {
                     if (response.status === 401) {
-                        errorMessage.innerHTML = '<i class="fa-solid fa-exclamation-triangle mr-2"></i>You need to be logged in to share jokes. <a href="/login" class="text-red-800 underline hover:text-red-900">Login here</a>';
+                        errorMessage.innerHTML = '<i class="fa-solid fa-exclamation-triangle mr-2"></i>You need to be logged in to share jokes. <a href="/" class="text-red-800 underline hover:text-red-900">Login here</a>';
                     } else {
                         errorMessage.innerHTML = '<i class="fa-solid fa-exclamation-triangle mr-2"></i>' + (data.error || 'Failed to share joke. Please try again.');
                     }
