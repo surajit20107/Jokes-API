@@ -2,11 +2,12 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"main/routes"
-	"main/config"
 	"log"
+	"main/config"
 	"main/db"
 	"main/frontend"
+	middleware "main/middlewares"
+	"main/routes"
 )
 
 func main() {
@@ -15,9 +16,11 @@ func main() {
 	dataBase := db.ConnectDatabase(config)
 
 	db.Migrate(dataBase)
-	
+
 	router := gin.Default()
-	
+
+	router.Use(middleware.SecurityHeaders()) // custom middleware for security headers
+
 	routes.RegisterJokeRoutes(router)
 	routes.RegisterAuthRoutes(router)
 
@@ -25,7 +28,7 @@ func main() {
 		c.JSON(200, gin.H{
 			"Message": "Api is running...",
 			"Version": "1.0.0",
-			"Author": "Surajit",
+			"Author":  "Surajit",
 		})
 	})
 
