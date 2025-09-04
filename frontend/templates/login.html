@@ -158,7 +158,8 @@
                             return
                         }
                         localStorage.removeItem("token");
-                    } catch () {
+                    } catch (error) {
+                        console.error("Token validation error:", error);
                         localStorage.removeItem("token");
                     }
                 }
@@ -229,7 +230,8 @@
                         successMessage.classList.remove("hidden");
 
                         // Redirect to profile page after successful login
-                        setTimeout(() => {                          window.location.href = "/profile";
+                        setTimeout(() => {
+                            window.location.href = "/profile";
                         }, 1500);
                     } else {
                         errorMessage.textContent =
