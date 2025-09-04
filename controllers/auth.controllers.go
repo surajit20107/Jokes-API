@@ -7,6 +7,7 @@ import (
 	"main/services"
 	"main/validator"
 	"net/http"
+	"main/models"
 )
 
 func Register(c *gin.Context) {
@@ -93,15 +94,26 @@ func Logout(c *gin.Context) {
 }
 
 func Me(c *gin.Context) {
-	user, exists := c.Get("user")
+	userInterface, exists := c.Get("user")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Unauthorized",
 		})
 		return
 	}
+
+	user, ok := userInterface.(models.User)
+
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Internal server error",
+		})
+		return
+	}
+
+	userResponse := dto.ToUserResponse(user)
 	
 	c.JSON(http.StatusOK, gin.H{
-		"user": user,
+		"user": userResponse,
 	})
 }
