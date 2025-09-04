@@ -124,7 +124,7 @@
                     headers['Authorization'] = `Bearer ${token}`;
                 }
                 
-                const response = await fetch('/api/v1/auth/me', {
+                const response = await fetch('/api/v1/auth/my', {
                     method: 'GET',
                     headers: headers,
                     credentials: 'include',
